@@ -1,0 +1,72 @@
+﻿@model IEnumerable<CRUD2.Models.User>
+
+@{
+    ViewBag.Title = "AllUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="table-responsive w-100">
+    <table class="table">
+        <tr>
+            <th class="text-center">
+                @*@Html.DisplayNameFor(model => model.name)*@
+                User Name
+            </th>
+            <th class="text-center">
+                @*@Html.DisplayNameFor(model => model.dob)*@
+                Date Of Birth
+            </th>
+            <th class="text-center">
+                @*@Html.DisplayNameFor(model => model.gender)*@
+                Gender
+            </th>
+            <th class="text-center">
+                @*@Html.DisplayNameFor(model => model.profile_photo)*@
+                Profile_Photo
+            </th>
+            <th class="text-center">
+                Edit
+            </th>
+            <th class="text-center">
+                Delete
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.dob)
+                </td>
+                <td class="text-center">
+                    @if (item.gender == true)
+                    {
+                        @Html.Raw("Female")
+                    }
+                    else
+                    {
+                        @Html.Raw("male")
+                    }
+                </td>
+                <td class="text-center">
+                    @*@Html.DisplayFor(modelItem => item.profile_photo)*@
+                    <img src="@Url.Content(item.profile_photo)" alt="Profile Photo" style="width: 40px; height: 40px;">
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-primary" style="text-decoration: none;">
+                        @Html.ActionLink("Edit", "Edit", new { id = item.userId }, new { @class = "btn-link text-white" })
+                    </button>
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-danger" style="text-decoration: none;">
+                        @Html.ActionLink("Delete", "Delete", new { id = item.userId }, new { @class = "btn-link text-white" })
+                    </button>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
