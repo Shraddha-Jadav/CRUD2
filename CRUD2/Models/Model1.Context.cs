@@ -13,10 +13,10 @@ namespace CRUD2.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ShraddhaEntities1 : DbContext
+    public partial class ShraddhaEntities6 : DbContext
     {
-        public ShraddhaEntities1()
-            : base("name=ShraddhaEntities1")
+        public ShraddhaEntities6()
+            : base("name=ShraddhaEntities6")
         {
         }
     
@@ -25,6 +25,6 @@ namespace CRUD2.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<user> users { get; set; }
     }
 }

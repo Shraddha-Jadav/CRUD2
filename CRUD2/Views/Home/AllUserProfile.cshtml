@@ -1,0 +1,54 @@
+﻿@model IEnumerable<CRUD2.Models.user>
+
+@{
+    ViewBag.Title = "AllUserProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <div class="float-end">
+        <button class="btn border-4 border-primary"> @Html.ActionLink("Table View", "AllUsers", new { @class = "text-white" })</button>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 mt-5 d-flex justify-content-center"">
+        @foreach (var item in Model)
+        {
+            <div class="col mb-4">
+                <div class="card border-2 border-start rounded-2">
+                    <div class="d-flex justify-content-center m-1">
+                        <img src="@Url.Content(item.profile_photo)" alt="Profile Photo" style="width: 100px; height: 100px;" class="rounded-circle card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.name</h5>
+                        <p class="card-text">
+                            <b>Gender: </b>
+                            @if (item.gender == true)
+                            {
+                                @Html.Raw("Female")
+                            }
+                            else
+                            {
+                                @Html.Raw("Male")
+                            }
+                        </p>
+                        <p><b>Date Of Birth:</b> @item.dob</p>
+                        <p><b>Email: </b> @item.email</p>
+                        <p><b>City: </b>@item.city</p>
+                        <p><b>Address: </b>@item.address</p>
+                        <p><b>Resume: </b>@item.resume</p>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-center">
+                        <button class="btn btn-primary btn-sm me-3" style="text-decoration: none;">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.userId }, new { @class = "btn-link text-white px-3" })
+                        </button>
+                        <button class="btn btn-danger btn-sm" style="text-decoration: none;">
+                            @Html.ActionLink("Delete", "Delete", new { id = item.userId }, new { @class = "btn-link text-white px-2" })
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+

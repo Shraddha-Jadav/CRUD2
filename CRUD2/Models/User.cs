@@ -6,25 +6,31 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System.ComponentModel.DataAnnotations;
-using System.Web;
 
 namespace CRUD2.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-
-    public partial class User
+    
+    public partial class user
     {
         public int userId { get; set; }
-        [Required(ErrorMessage = "Name is required")]
         public string name { get; set; }
-        [Required(ErrorMessage = "date of birth is required")]
-        public DateTime dob { get; set; }
+        public Nullable<System.DateTime> dob { get; set; }
         public Nullable<bool> gender { get; set; }
-        [DisplayName("Uploaded file")]
+        public string email { get; set; }
+        public string city { get; set; }
+        public string address { get; set; }
+        public string hobbies { get; set; }
         public string profile_photo { get; set; }
-        public HttpPostedFileBase imageFile { get; set; }
+        public string resume { get; set; }
+    }
+
+    public enum City
+    {
+        Junagadh,
+        Ahemedabad,
+        Surat,
+        Vadodara
     }
 }

@@ -15,10 +15,10 @@ namespace CRUD2.Controllers
 {
     public class HomeController : Controller
     {
-        private ShraddhaEntities1 dbContext;
+        private ShraddhaEntities6 dbContext;
         public HomeController()
         {
-            dbContext = new ShraddhaEntities1();
+            dbContext = new ShraddhaEntities6();
         }
 
         public ActionResult Index()
@@ -28,8 +28,14 @@ namespace CRUD2.Controllers
 
         public ActionResult AllUsers()
         {
-            var users = dbContext.Users.ToList();
+            var users = dbContext.users.ToList();
             dbContext.SaveChanges();
+            return View(users);
+        }
+
+        public ActionResult AllUserProfile()
+        {
+            var users = dbContext.users.ToList();
             return View(users);
         }
 
@@ -39,17 +45,35 @@ namespace CRUD2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(User u)
+        public ActionResult Create(user u, HttpPostedFileBase imageFile, HttpPostedFileBase resumeFile)
         {
             if (ModelState.IsValid)
             {
-                var fileName = Path.GetFileNameWithoutExtension(u.imageFile.FileName);
-                string extension = Path.GetExtension(u.imageFile.FileName);
-                fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                u.profile_photo = "~/Content/img/" + fileName;
-                fileName = Path.Combine(Server.MapPath("~/Content/img"), fileName);
-                u.imageFile.SaveAs(fileName);
-                dbContext.Users.Add(u);
+                if(imageFile != null)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
+                    string extension = Path.GetExtension(imageFile.FileName);
+                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    u.profile_photo = "~/Content/img/" + fileName;
+                    fileName = Path.Combine(Server.MapPath("~/Content/img"), fileName);
+                    imageFile.SaveAs(fileName);
+                }
+                else
+                {
+                    u.profile_photo = "~/Content/img/dummy_profile_img.png";
+                }
+
+                if (resumeFile != null && resumeFile.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(resumeFile.FileName);
+                    string extension = Path.GetExtension(resumeFile.FileName);
+                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    u.resume = "~/Content/TextFiles/" + fileName;
+                    fileName = Path.Combine(Server.MapPath("~/Content/TextFiles"), fileName);
+                    resumeFile.SaveAs(fileName);
+                }
+                
+                dbContext.users.Add(u);
                 dbContext.SaveChanges();
                 ModelState.Clear();
                 return RedirectToAction("AllUsers");
@@ -64,7 +88,7 @@ namespace CRUD2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var rowData = dbContext.Users.Where(x => x.userId == id).FirstOrDefault();
+                var rowData = dbContext.users.Where(x => x.userId == id).FirstOrDefault();
                 if (rowData != null)
                 {
                     TempData["UserId"] = id;
@@ -80,28 +104,44 @@ namespace CRUD2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(User u, HttpPostedFileBase imageFile)
+        public ActionResult Edit(user u, HttpPostedFileBase imageFile, HttpPostedFileBase resumeFile)
         {
             if (ModelState.IsValid)
             {
                 var userId = (int)TempData["UserId"];
-                var userObj = dbContext.Users.FirstOrDefault(x => x.userId == userId);
+                var userObj = dbContext.users.FirstOrDefault(x => x.userId == userId);
 
                 if (userObj != null)
                 {
                     userObj.name = u.name;
                     userObj.dob = u.dob;
                     userObj.gender = u.gender;
-
-                    // Check if a new file is uploaded
+                    userObj.email = u.email;
+                    userObj.address = u.address;
+                    userObj.city = u.city;
+                    
                     if (imageFile != null && imageFile.ContentLength > 0)
                     {
-                        var fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
+                        DeleteImageFile(userId);
+
+                         var fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
                         string extension = Path.GetExtension(imageFile.FileName);
                         fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        u.profile_photo = "~/Content/img/" + fileName;
+                        userObj.profile_photo = "~/Content/img/" + fileName;
                         fileName = Path.Combine(Server.MapPath("~/Content/img"), fileName);
                         imageFile.SaveAs(fileName);
+                    }
+
+                    if (resumeFile != null && resumeFile.ContentLength > 0)
+                    {
+                        DeleteTextFile(userId);
+
+                        var fileName = Path.GetFileNameWithoutExtension(resumeFile.FileName);
+                        string extension = Path.GetExtension(resumeFile.FileName);
+                        fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        userObj.resume = "~/Content/TextFiles/" + fileName;
+                        fileName = Path.Combine(Server.MapPath("~/Content/TextFiles"), fileName);
+                        resumeFile.SaveAs(fileName);
                     }
 
                     dbContext.Entry(userObj).State = EntityState.Modified;
@@ -111,20 +151,42 @@ namespace CRUD2.Controllers
             }
             else
             {
-                // Handle invalid model state
                 return View(u);
             }
         }
 
         public ActionResult Delete(int id)
         {
-            var user = dbContext.Users.Find(id);
-            if(user != null)
-            {
-                dbContext.Users.Remove(user);
+            var user = dbContext.users.Find(id);
+
+            if (user != null)
+            { 
+                DeleteImageFile(id);
+                DeleteTextFile(id);
+                dbContext.users.Remove(user);
                 dbContext.SaveChanges();
             }
             return RedirectToAction("AllUsers");
+        }
+
+        //delete old image file from Conetent/img
+        public void DeleteImageFile(int id)
+        {
+            var userObj = dbContext.users.FirstOrDefault(x => x.userId == id);
+
+            var oldImageFilePath = userObj.profile_photo;
+            oldImageFilePath = Server.MapPath(oldImageFilePath);
+            System.IO.File.Delete(oldImageFilePath);
+        }
+
+        //delete old text file from Conetent/TextFiles
+        public void DeleteTextFile(int id)
+        {
+            var userObj = dbContext.users.FirstOrDefault(x => x.userId == id);
+
+            var oldTextFilePath = userObj.resume;
+            oldTextFilePath = Server.MapPath(oldTextFilePath);
+            System.IO.File.Delete(oldTextFilePath);
         }
     }
 }
