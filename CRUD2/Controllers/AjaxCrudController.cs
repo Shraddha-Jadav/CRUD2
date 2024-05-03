@@ -2,42 +2,27 @@
 using CRUD2.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace CRUD2.Controllers
 {
     [LogActionFilter]
-    public class HomeController : Controller
+    public class AjaxCrudController : Controller
     {
-        private ShraddhaEntities7 dbContext;
-        public HomeController()
-        {
-            dbContext = new ShraddhaEntities7();
-        }
+        private ShraddhaEntities7 _dbContext;
 
+        public AjaxCrudController()
+        {
+            _dbContext = new ShraddhaEntities7();
+        }
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult AllUsers()
-        {
-            var users = dbContext.users.ToList();
-            dbContext.SaveChanges();
-            return View(users);
-        }
-
-        public ActionResult AllUserProfile()
-        {
-            var users = dbContext.users.ToList();
+            var users = _dbContext.users.ToList();
             return View(users);
         }
 
@@ -51,38 +36,23 @@ namespace CRUD2.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(imageFile != null)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
-                    string extension = Path.GetExtension(imageFile.FileName);
-                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    u.profile_photo = "~/Content/img/" + fileName;
-                    fileName = Path.Combine(Server.MapPath("~/Content/img"), fileName);
-                    imageFile.SaveAs(fileName);
-                }
-                else
+                u.profile_photo = SaveUploadedFile(imageFile, "~/Content/img/");
+                if(u.profile_photo == null)
                 {
                     u.profile_photo = "~/Content/img/dummy_profile_img.png";
                 }
 
-                if (resumeFile != null && resumeFile.ContentLength > 0)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(resumeFile.FileName);
-                    string extension = Path.GetExtension(resumeFile.FileName);
-                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    u.resume = "~/Content/TextFiles/" + fileName;
-                    fileName = Path.Combine(Server.MapPath("~/Content/TextFiles"), fileName);
-                    resumeFile.SaveAs(fileName);
-                }
-                
-                dbContext.users.Add(u);
-                dbContext.SaveChanges();
-                ModelState.Clear();
-                return RedirectToAction("AllUsers");
+                u.resume = SaveUploadedFile(resumeFile, "~/Content/TextFiles/");
+
+                _dbContext.users.Add(u);
+                _dbContext.SaveChanges();
+
+                return Json(new { success = true, redirectToUrl = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return View();
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return Json(new { success = false, message = "Validation failed", errors = errors }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -90,7 +60,7 @@ namespace CRUD2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var rowData = dbContext.users.Where(x => x.userId == id).FirstOrDefault();
+                var rowData = _dbContext.users.Where(x => x.userId == id).FirstOrDefault();
                 if (rowData != null)
                 {
                     TempData["UserId"] = id;
@@ -111,7 +81,7 @@ namespace CRUD2.Controllers
             if (ModelState.IsValid)
             {
                 var userId = (int)TempData["UserId"];
-                var userObj = dbContext.users.FirstOrDefault(x => x.userId == userId);
+                var userObj = _dbContext.users.FirstOrDefault(x => x.userId == userId);
 
                 if (userObj != null)
                 {
@@ -121,12 +91,12 @@ namespace CRUD2.Controllers
                     userObj.email = u.email;
                     userObj.address = u.address;
                     userObj.city = u.city;
-                    
+
                     if (imageFile != null && imageFile.ContentLength > 0)
                     {
                         DeleteImageFile(userId);
 
-                         var fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
+                        var fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
                         string extension = Path.GetExtension(imageFile.FileName);
                         fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
                         userObj.profile_photo = "~/Content/img/" + fileName;
@@ -146,10 +116,10 @@ namespace CRUD2.Controllers
                         resumeFile.SaveAs(fileName);
                     }
 
-                    dbContext.Entry(userObj).State = EntityState.Modified;
-                    dbContext.SaveChanges();
+                    _dbContext.Entry(userObj).State = EntityState.Modified;
+                    _dbContext.SaveChanges();
                 }
-                return RedirectToAction("AllUsers");
+                return RedirectToAction("Index");
             }
             else
             {
@@ -159,36 +129,48 @@ namespace CRUD2.Controllers
 
         public ActionResult Delete(int id)
         {
-            var user = dbContext.users.Find(id);
+            var user = _dbContext.users.Find(id);
 
             if (user != null)
-            { 
+            {
                 DeleteImageFile(id);
                 DeleteTextFile(id);
-                dbContext.users.Remove(user);
-                dbContext.SaveChanges();
+                _dbContext.users.Remove(user);
+                _dbContext.SaveChanges();
             }
-            return RedirectToAction("AllUsers");
+            return RedirectToAction("Index");
         }
 
-        //delete old image file from Conetent/img
         public void DeleteImageFile(int id)
         {
-            var userObj = dbContext.users.FirstOrDefault(x => x.userId == id);
+            var userObj = _dbContext.users.FirstOrDefault(x => x.userId == id);
 
             var oldImageFilePath = userObj.profile_photo;
             oldImageFilePath = Server.MapPath(oldImageFilePath);
             System.IO.File.Delete(oldImageFilePath);
         }
 
-        //delete old text file from Conetent/TextFiles
         public void DeleteTextFile(int id)
         {
-            var userObj = dbContext.users.FirstOrDefault(x => x.userId == id);
+            var userObj = _dbContext.users.FirstOrDefault(x => x.userId == id);
 
             var oldTextFilePath = userObj.resume;
             oldTextFilePath = Server.MapPath(oldTextFilePath);
             System.IO.File.Delete(oldTextFilePath);
+        }
+
+        private string SaveUploadedFile(HttpPostedFileBase file, string folderPath)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                string extension = Path.GetExtension(file.FileName);
+                fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                var filePath = Path.Combine(Server.MapPath(folderPath), fileName);
+                file.SaveAs(filePath);
+                return folderPath + fileName;
+            }
+            return null;
         }
     }
 }

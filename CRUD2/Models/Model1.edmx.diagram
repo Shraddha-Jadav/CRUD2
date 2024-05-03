@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="429a3635c2cb44a28f3073bc3a8e6378" Name="Diagram1">
+      <Diagram DiagramId="fef7108a7426444b80b23df1b0fc4897" Name="Diagram1">
         <EntityTypeShape EntityType="ShraddhaModel.user" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>

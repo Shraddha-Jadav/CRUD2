@@ -1,0 +1,428 @@
+@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@100&family=Inter:wght@100;500&family=Poppins:wght@400;500&display=swap");
+
+:root {
+  --backColor: #5D5FEF;
+  --textColor: #05004E;
+}
+
+body {
+  padding-bottom: 30px;
+  position: relative;
+  min-height: 100%;
+}
+
+body,
+button {
+  font-family: "Inter", sans-serif;
+}
+
+a {
+  transition: background 0.2s, color 0.2s;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+#wrapper {
+  padding-left: 0;
+  transition: all 0.5s ease;
+  position: relative;
+}
+
+
+/*------------------------ sidebar -----------------------------*/
+#sidebar-wrapper {
+  z-index: 1000;
+  position: fixed;
+  left: 250px;
+  width: 0;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #222;
+  transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  width: 250px;
+}
+
+.sidebar-brand {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  padding: 20px 14px;
+}
+
+.sidebar-brand span {
+  margin: 0;
+  font-weight: 600;
+  font-size: 24px;
+  color: #000000;
+}
+
+.sidebar-logo {
+  margin-right: 0.5rem;
+  height: 2.8rem;
+}
+
+.sidebar-nav {
+  position: absolute;
+  top: 75px;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-nav>li {
+  text-indent: 10px;
+  line-height: 42px;
+}
+
+.sidebar-nav>li a {
+  display: block;
+  text-decoration: none;
+  color: #757575;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 10px;
+  margin-top: 2rem;
+}
+
+.sidebar-nav>li>a:hover,
+.sidebar-nav>li.active>a {
+  text-decoration: none;
+  color: #fff;
+  background: var(--backColor);
+}
+
+.sidebar-nav>li>a i.fa {
+  font-size: 24px;
+  width: 60px;
+}
+
+.sidebar-card
+{
+  margin-top: 650px;
+  background-image: url();
+}
+
+.hidden
+{
+  display: none !important;
+}
+
+.sidebar-card {
+  transition: opacity 0.5s ease;
+}
+
+/*------------------------------ navbar ---------------------------*/
+
+.nav-toggler {
+  border: 0px;
+  height: auto;
+}
+
+#navbar-wrapper {
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+}
+
+#wrapper.toggled #navbar-wrapper {
+  position: absolute;
+  margin-right: -250px;
+}
+
+#navbar-wrapper .navbar {
+  border-width: 0 0 0 0;
+  background-color: #eee;
+  font-size: 24px;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+#navbar-wrapper .navbar a {
+  color: #757575;
+}
+
+#navbar-wrapper .navbar a:hover {
+  color: var(--backColor);
+}
+
+.bi-bell {
+  height: auto;
+  width: 100%;
+  color: rgb(255, 81, 0);
+  background: #FFFAF1;
+
+}
+
+.user-photo {
+  height: 2.5rem;
+}
+
+.user-name {
+  font-size: 1rem;
+}
+
+#content-wrapper {
+  width: 100%;
+  position: absolute;
+  padding: 15px;
+  top: 100px;
+}
+
+#wrapper.toggled #content-wrapper {
+  position: absolute;
+  margin-right: -250px;
+}
+
+@media (min-width: 992px) {
+  #wrapper {
+    padding-left: 250px;
+  }
+
+  #wrapper.toggled {
+    padding-left: 100px;
+  }
+
+  #sidebar-wrapper {
+    width: 250px;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    width: 60px;
+  }
+
+  #wrapper.toggled #navbar-wrapper {
+    position: absolute;
+    margin-right: -190px;
+  }
+
+  #navbar-wrapper {
+    position: relative;
+  }
+
+  #wrapper.toggled {
+    padding-left: 80px;
+  }
+
+  #content-wrapper {
+    position: relative;
+    top: 0;
+  }
+
+  #wrapper.toggled #navbar-wrapper,
+  #wrapper.toggled #content-wrapper {
+    position: relative;
+    margin-right: 60px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  #wrapper {
+    padding-left: 70px;
+  }
+
+  #sidebar-wrapper {
+    width: 60px;
+  }
+
+  .sidebar-card
+  {
+    opacity: 0;
+    margin: 0;
+  }
+
+  #wrapper.toggled #navbar-wrapper {
+    position: absolute;
+    margin-right: -250px;
+  }
+
+  #wrapper.toggled #content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+  }
+
+  #navbar-wrapper {
+    position: relative;
+  }
+
+  #wrapper.toggled {
+    padding-left: 250px;
+  }
+
+  #content-wrapper {
+    position: relative;
+    top: 0;
+  }
+
+  #wrapper.toggled #navbar-wrapper,
+  #wrapper.toggled #content-wrapper {
+    position: relative;
+    margin-right: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  #wrapper {
+    padding-left: 0;
+  }
+
+  #sidebar-wrapper {
+    width: 0;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+  }
+
+  #wrapper.toggled #navbar-wrapper {
+    position: absolute;
+    margin-right: -250px;
+  }
+
+  #wrapper.toggled #content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+  }
+
+  #navbar-wrapper {
+    position: relative;
+  }
+
+  #wrapper.toggled {
+    padding-left: 250px;
+  }
+
+  #content-wrapper {
+    position: relative;
+    top: 0;
+  }
+
+  #wrapper.toggled #navbar-wrapper,
+  #wrapper.toggled #content-wrapper {
+    position: relative;
+    margin-right: 250px;
+  }
+}
+
+.heading {
+  color: var(--textColor);
+}
+
+/* ----------------------------row 1----------------------------- */
+.card {
+  color: black !important;
+  border: 0px;
+}
+
+.card1 {
+  background: #FFE2E5;
+}
+
+.card2 {
+  background: #FFF4DE;
+}
+
+.card3 {
+  background: #DCFCE7;
+}
+
+.card4 {
+  background: #F3E8FF;
+}
+
+.card-icon
+{
+  border-radius: 50%;
+  padding: 5px;
+  margin: 0;
+}
+
+.sales-icon
+{
+  background: #FA5A7D;
+}
+
+.order-icon
+{
+  background: #FF947A;
+}
+
+.disc-icon
+{
+  background: #3CD856;
+}
+
+.new-cus-icon
+{
+  background: #BF83FF;
+}
+
+.card-title
+{
+  margin-top: 15px;
+  color: var(--textColor);
+}
+
+.discount {
+  color: #6789e6;
+  font-size: 15px;
+}
+
+.export-icon
+{
+  color: var(--backColor);
+}
+
+.accordion-btn-clr {
+  background-color: var(--backColor);
+  color: white!important;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--backColor);
+}
+
+/* ------------------------row 2 -------------------------- */
+
+.bi-pencil {
+  color: #0044ff;
+}
+
+.bi-trash {
+  color: #ff0015;
+}
+
+#read-more {
+  color: #0044ff;
+  border: none;
+}
+
+.progress {
+  height: 5px;
+}
+
+.btn-active {
+  background-color: var(--backColor);
+}
+
+.btn-back {
+  background-color: var(--backColor);
+  border: 0px;
+}
+
+.btn-active:hover {
+  background-color: var(--backColor);
+}
+
+.product-button {
+  background-color: var(--backColor);
+  color: white;
+}

@@ -28,9 +28,9 @@ namespace CRUD2.Models
 
     public enum City
     {
+        Ahemdabad,
         Junagadh,
-        Ahemedabad,
-        Surat,
-        Vadodara
+        Rajkot,
+        Surat
     }
 }

@@ -126,9 +126,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionFilters\LogActionFilter.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AjaxCrudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -138,18 +140,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Model1.cs" />
-    <Compile Include="Models\Model1.Designer.cs">
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Models\Model11.cs">
+    <Compile Include="Models\Model1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\User.cs">
+    <Compile Include="Models\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\user.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -172,6 +173,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\TextFile\Log.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -183,7 +185,7 @@
     <Content Include="Models\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model11.cs</LastGenOutput>
+      <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -225,6 +227,9 @@
     <Content Include="Views\Home\Create.cshtml" />
     <Content Include="Views\Home\Edit.cshtml" />
     <Content Include="Views\Home\AllUserProfile.cshtml" />
+    <Content Include="Views\AjaxCrud\Index.cshtml" />
+    <Content Include="Views\AjaxCrud\Create.cshtml" />
+    <Content Include="Views\AjaxCrud\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

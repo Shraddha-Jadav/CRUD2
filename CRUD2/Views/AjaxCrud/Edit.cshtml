@@ -1,0 +1,129 @@
+﻿@model CRUD2.Models.user
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="POST" action="@Url.Action("Edit", "AjaxCrud")" id="edit-form" class="shadow-lg m-4 p-4 w-25 d-flex justify-content-center" enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.userId)
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group text-center">
+            <input type="file" class="form-control" name="imageFile" id="fileInput" style="display: none;" required onchange="updateImage(this);" />
+            <img id="previewImage" class="rounded-circle border-1" src="@Url.Content(Model.profile_photo)" alt="Profile Photo" style="width: 70px; height: 70px; cursor: pointer;" onclick="document.getElementById('fileInput').click();" />
+            <label for="fileInput" style="position: absolute; top: 0; left: 0; width: 50px; height: 50px; cursor: pointer; background-color: rgba(255, 255, 255, 0);"></label>
+            @Html.ValidationMessageFor(model => model.profile_photo, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2 mt-2" })
+            @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Your Name" } })
+            @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Gender", htmlAttributes: new { @class = "control-label mt-2" })<br />
+            Male:
+            @Html.RadioButton("gender", "false", htmlAttributes: new { @class = "me-2" })
+            Female:
+            @Html.RadioButton("gender", "true")
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.dob, htmlAttributes: new { @class = "control-label col-md-2 mt-2" })
+            @Html.TextBoxFor(model => model.dob, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(model => model.dob, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Email", htmlAttributes: new { @class = "control-label mt-2" })<br />
+            @Html.TextBoxFor(model => model.email, new { @class = "form-control", type = "email", placeholder = "Enter your email" })
+            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group my-2">
+            @Html.Label("Hobbies", htmlAttributes: new { @class = "control-label col-md-2 mt-2" })<br />
+
+            <label>Cricket</label>
+            @Html.CheckBox("SelectedHobbies", new { value = "Cricket", @class = "me-1" })
+
+            <label>Dancing</label>
+            @Html.CheckBox("SelectedHobbies", new { value = "Dancing", @class = "me-1" })
+
+            <label>Reading</label>
+            @Html.CheckBox("SelectedHobbies", new { value = "Reading", @class = "me-1" })
+        </div>
+
+        <div>
+            @Html.Label("City", htmlAttributes: new { @class = "control-label col-md-2 mt-2" })<br />
+            @Html.DropDownListFor(m => m.city, new SelectList(Enum.GetValues(typeof(CRUD2.Models.City))), new { @class = "form-control" })
+        </div>
+
+        <div>
+            @Html.Label("Address", htmlAttributes: new { @class = "control-label mt-2" }) <br />
+            @Html.TextAreaFor(model => model.address, new { @class = "form-control", cols = "50", rows = "1" })
+            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.resume, new { @class = "control-label col-md-2 " })
+            <input type="file" class="form-control" name="resumeFile" required />
+            @Html.ValidationMessageFor(model => model.resume, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group text-center">
+            <div class="col-md-offset-2 col-md-10 mt-3">
+                <input type="submit" value="Edit" class="btn btn-lg border-2 rounded-2 btn-success" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+        $(function () {
+            $('#submitEditForm').click(function (e) {
+                e.preventDefault();
+
+                var formData = new FormData($('#edit-form')[0]);
+
+                $.ajax({
+                    url: '@Url.Action("Edit", "AjaxCrud")',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result.success) {
+                            window.location.href = result.redirectToUrl;
+                        } else {
+                            console.error(result.errors);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        function updateImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    document.getElementById('previewImage').setAttribute('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+</script>

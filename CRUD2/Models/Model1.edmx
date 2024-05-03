@@ -43,7 +43,7 @@
           <Property Name="profile_photo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="resume" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityContainer Name="ShraddhaEntities6" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="ShraddhaEntities7" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="users" EntityType="Self.user" />
         </EntityContainer>
       </Schema>
@@ -51,7 +51,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ShraddhaModelStoreContainer" CdmEntityContainer="ShraddhaEntities6">
+        <EntityContainerMapping StorageEntityContainer="ShraddhaModelStoreContainer" CdmEntityContainer="ShraddhaEntities7">
           <EntitySetMapping Name="users">
             <EntityTypeMapping TypeName="ShraddhaModel.user">
               <MappingFragment StoreEntitySet="users">

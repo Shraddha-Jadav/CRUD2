@@ -13,10 +13,10 @@ namespace CRUD2.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ShraddhaEntities6 : DbContext
+    public partial class ShraddhaEntities7 : DbContext
     {
-        public ShraddhaEntities6()
-            : base("name=ShraddhaEntities6")
+        public ShraddhaEntities7()
+            : base("name=ShraddhaEntities7")
         {
         }
     
